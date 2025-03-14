@@ -33,17 +33,33 @@ python -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
 
 # Install dependencies
+# The Secret AI SDK requires specific installation steps
 pip install -r requirements.txt
 
 # Set environment variables
 # Windows PowerShell
-$env:SECRET_AI_API_KEY="your_api_key_here"
+$env:SECRET_AI_API_KEY="bWFzdGVyQHNjcnRsYWJzLmNvbTpTZWNyZXROZXR3b3JrTWFzdGVyS2V5X18yMDI1"
 
 # Windows CMD
-set SECRET_AI_API_KEY=your_api_key_here
+set SECRET_AI_API_KEY=bWFzdGVyQHNjcnRsYWJzLmNvbTpTZWNyZXROZXR3b3JrTWFzdGVyS2V5X18yMDI1
 
 # Linux/Mac
-export SECRET_AI_API_KEY="your_api_key_here"
+export SECRET_AI_API_KEY="bWFzdGVyQHNjcnRsYWJzLmNvbTpTZWNyZXROZXR3b3JrTWFzdGVyS2V5X18yMDI1"
+```
+
+### Troubleshooting Installation
+
+If you encounter issues with the `secret-ai-sdk` package installation, try the following steps:
+
+```bash
+# Install the secret-sdk package first
+pip install 'secret-sdk>=1.8.1'
+
+# Then install the secret-ai-sdk package
+pip install secret-ai-sdk
+
+# Continue with the remaining dependencies
+pip install -r requirements.txt
 ```
 
 ## Running the API
@@ -64,7 +80,6 @@ The API will be available at http://localhost:8000
 ### Models
 
 - `GET /api/models` - Get available AI models
-- `GET /api/model/{model_name}/capabilities` - Get detailed capabilities of a specific model
 
 ### Chat
 
