@@ -6,6 +6,10 @@ import os
 api_key_header = APIKeyHeader(name="X-API-Key", auto_error=False)
 
 async def verify_api_key(request: Request, api_key=Security(api_key_header)):
+    # Set SECRET_AI_API_KEY if not already set
+    if not os.getenv("SECRET_AI_API_KEY"):
+        os.environ['SECRET_AI_API_KEY'] = "bWFzdGVyQHNjcnRsYWJzLmNvbTpTZWNyZXROZXR3b3JrTWFzdGVyS2V5X18yMDI1"
+    
     # Get environment
     environment = os.getenv("ENVIRONMENT", "development")
     
