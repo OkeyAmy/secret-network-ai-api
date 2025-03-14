@@ -2,6 +2,7 @@ fastapi
 uvicorn
 pydantic
 python-dotenv
+secret-sdk>=1.8.1
 secret-ai-sdk
 python-multipart
 starlette
