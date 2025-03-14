@@ -253,13 +253,13 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## Support
 
-For support and further information about Secret Network's AI capabilities, visit [Secret Network](https://secretnetwork.io).
+For support and further information about Secret Network's AI capabilities, visit [Secret Network](https://docs.scrt.network/secret-network-documentation/secret-ai/introduction).
 
 ## Special Thanks
 
 This project was created with love from Windsurf and Secret AI for their project. 
 
-> **Note about API Keys:** The API key is open and publicly available. You can find it in the [Secret AI documentation](https://docs.secretnetwork.io/secret-network-documentation/secret-ai).
+> **Note about API Keys:** The API key is open and publicly available. You can find it in the [Secret AI documentation](https://docs.scrt.network/secret-network-documentation/secret-ai/sdk/setting-up-your-environment).
 
 ---
 
