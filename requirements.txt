@@ -8,6 +8,8 @@ starlette==0.27.0
 typing-extensions==4.8.0
 uuid==1.30
 requests>=2.28.0
+asyncio==3.4.3
+request-limiter==1.1.1
 
 # Secret Network SDK dependencies
 secret-sdk>=1.8.1

@@ -2,15 +2,15 @@ from fastapi import APIRouter, Depends, HTTPException
 from app.config import settings
 from app.security import verify_api_key
 from typing import Dict, Any
-from app.models import AvailableModels
 
 router = APIRouter()
 
 @router.get("/models", tags=["Models"])
 async def get_available_models(api_key: str = Depends(verify_api_key)):
     try:
-        # Return hardcoded model information since we can't use the SDK
-        models = [model.value for model in AvailableModels]
+        from app.main import secret_client  # Import here to avoid circular imports
+        
+        models = secret_client.get_models()
         model_info = {
             "deepseek-r1:70b": {
                 "description": "Advanced language model for text generation and analysis",

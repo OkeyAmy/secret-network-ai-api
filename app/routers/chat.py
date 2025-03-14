@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 from app.config import settings
 from app.security import verify_api_key
-from app.secret_ai_client import SecretAIClient
+from secret_ai_sdk.secret_ai import ChatSecret
 from datetime import datetime
 from uuid import uuid5, NAMESPACE_DNS
 from typing import Dict, List, Any
@@ -18,9 +18,17 @@ async def chat_with_model(
     api_key: str = Depends(verify_api_key)
 ):
     try:
-        secret_client = SecretAIClient()
+        from app.main import secret_client  # Import here to avoid circular imports
         
         session_id = f"session_{uuid5(NAMESPACE_DNS, api_key)}"
+        urls = secret_client.get_urls(model=model)
+        if not urls:
+            raise HTTPException(status_code=404, detail="Model not found")
+        secret_ai_llm = ChatSecret(
+            base_url=urls[0],
+            model=model,
+            temperature=0.7
+        )
         
         system_prompt = """You are a thoughtful and helpful assistant when hlps user's whith their prompt/question. When answering user questions:
 1. Take time to think carefully about the question
@@ -34,33 +42,47 @@ async def chat_with_model(
 
 Your goal is to provide the most helpful and satisfying response possible, ensuring the user's needs are fully addressed."""
 
-        response = await secret_client.chat(model_name=model.value, prompt=prompt, system_prompt=system_prompt)
+        messages = chat_sessions.get(session_id, [("system", system_prompt)])
+        if len(messages) == 0:
+            messages.append(("system", system_prompt))
+        messages.append(("user", prompt))
         
-        if session_id not in chat_sessions:
-            chat_sessions[session_id] = []
+        response = secret_ai_llm.invoke(messages)
+        messages.append(("assistant", response.content))
+        chat_sessions[session_id] = messages
         
-        chat_sessions[session_id].append({
-            "role": "user",
-            "content": prompt,
-            "timestamp": datetime.now().isoformat()
-        })
-        
-        chat_sessions[session_id].append({
-            "role": "assistant",
-            "content": response.get("response", "Sorry, no response was generated."),
-            "timestamp": datetime.now().isoformat()
-        })
-        
-        return {
-            "model": model,
-            "response": response.get("response", "Sorry, no response was generated."),
-            "session_id": session_id
-        }
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"Error processing chat request: {str(e)}")
+        # Handle response based on model
+        if model == AvailableModels.LLAMA_VISION:
+            return {"response": response.content}
+        else:
+            # For DeepSeek model, parse think/response tags
+            content = response.content
+            
+            # Debug the actual content received
+            print(f"Raw response content: {content}")
+            
+            if "<think>" in content and "</think>" in content:
+                try:
+                    think_start = content.find("<think>") + len("<think>")
+                    think_end = content.find("</think>")
+                    think_output = content[think_start:think_end].strip()
+                    actual_response = content[think_end + len("</think>"):].strip()
+                    
+                    # Return both parts separately
+                    return {
+                        "Think Process": think_output,
+                        "Response": actual_response
+                    }
+                except Exception as parsing_error:
+                    print(f"Error parsing think tags: {parsing_error}")
+                    # Fall back to returning the whole response
+                    return {"response": content}
+            else:
+                # No think tags found, return the whole response
+                return {"response": content}
 
-@router.get("/chat/history/{session_id}", tags=['History'])
-async def get_chat_history(session_id: str, api_key: str = Depends(verify_api_key)):
-    if session_id not in chat_sessions:
-        return {"history": []}
-    return {"history": chat_sessions[session_id]}
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Error chatting with model: {str(e)}"
+        )

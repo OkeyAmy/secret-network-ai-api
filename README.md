@@ -1,6 +1,6 @@
 # Secret Network AI Hub API
 
-![Secret Network](https://secretnetwork.io/assets/images/Secret-Network-opengraph.png)
+![Secret Network](https://th.bing.com/th/id/OIP.Q3YYqq7bTMLB5c__FisPagHaB2?rs=1&pid=ImgDetMain)
 
 ## Overview
 
@@ -33,33 +33,17 @@ python -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
 
 # Install dependencies
-# The Secret AI SDK requires specific installation steps
 pip install -r requirements.txt
 
 # Set environment variables
 # Windows PowerShell
-$env:SECRET_AI_API_KEY="bWFzdGVyQHNjcnRsYWJzLmNvbTpTZWNyZXROZXR3b3JrTWFzdGVyS2V5X18yMDI1"
+$env:SECRET_AI_API_KEY="your_api_key_here"
 
 # Windows CMD
-set SECRET_AI_API_KEY=bWFzdGVyQHNjcnRsYWJzLmNvbTpTZWNyZXROZXR3b3JrTWFzdGVyS2V5X18yMDI1
+set SECRET_AI_API_KEY=your_api_key_here
 
 # Linux/Mac
-export SECRET_AI_API_KEY="bWFzdGVyQHNjcnRsYWJzLmNvbTpTZWNyZXROZXR3b3JrTWFzdGVyS2V5X18yMDI1"
-```
-
-### Troubleshooting Installation
-
-If you encounter issues with the `secret-ai-sdk` package installation, try the following steps:
-
-```bash
-# Install the secret-sdk package first
-pip install 'secret-sdk>=1.8.1'
-
-# Then install the secret-ai-sdk package
-pip install secret-ai-sdk
-
-# Continue with the remaining dependencies
-pip install -r requirements.txt
+export SECRET_AI_API_KEY="your_api_key_here"
 ```
 
 ## Running the API

@@ -3,12 +3,14 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.config import settings
 
-# Replace Secret AI SDK import with our custom client
-from app.secret_ai_client import SecretAIClient
+# Initialize Secret client first to avoid circular imports
+from secret_ai_sdk.secret import Secret
+secret_client = Secret()
 
 # Check API key
 if not os.getenv("SECRET_AI_API_KEY"):
-    raise ValueError("Please set the SECRET_AI_API_KEY environment variable")
+    from secret_ai_sdk.secret_ai_ex import SecretAIAPIKeyMissingError
+    raise SecretAIAPIKeyMissingError("Please set the SECRET_AI_API_KEY environment variable")
 
 def create_app():
     app = FastAPI(
