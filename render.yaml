@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: secret-network-ai-api
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: SECRET_AI_API_KEY
+        value: "bWFzdGVyQHNjcnRsYWJzLmNvbTpTZWNyZXROZXR3b3JrTWFzdGVyS2V5X18yMDI1"
+      - key: API_KEY
+        value: "frontend-access-key-2025"
+      - key: PORT
+        value: 8000
+      - key: ENVIRONMENT
+        value: "production"

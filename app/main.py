@@ -1,0 +1,42 @@
+import os 
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from app.config import settings
+
+# Initialize Secret client first to avoid circular imports
+from secret_ai_sdk.secret import Secret
+secret_client = Secret()
+
+# Check API key
+if not os.getenv("SECRET_AI_API_KEY"):
+    from secret_ai_sdk.secret_ai_ex import SecretAIAPIKeyMissingError
+    raise SecretAIAPIKeyMissingError("Please set the SECRET_AI_API_KEY environment variable")
+
+def create_app():
+    app = FastAPI(
+        title="Secret Network AI Hub API",
+        description="""API for integrating Secret Network's AI models with various applications. Access advanced language models securely through the Secret Network.""",
+        version="1.0.0",
+        docs_url="/docs",
+        redoc_url="/redoc"
+    )
+
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=settings.CORS_ORIGINS,
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
+
+    # Import routers here to avoid circular imports
+    from app.routers import models_router, chat_router, prompt_improver_router, health_router
+    
+    app.include_router(models_router, prefix="/api")
+    app.include_router(chat_router, prefix="/api")
+    app.include_router(prompt_improver_router, prefix="/api")
+    app.include_router(health_router, prefix="/api")
+
+    return app
+
+app = create_app()
