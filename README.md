@@ -1,6 +1,6 @@
 # Secret Network AI Hub API
 
-![Secret Network](https://secretnetwork.io/assets/images/Secret-Network-opengraph.png)
+![Secret Network](https://th.bing.com/th/id/OIP.Q3YYqq7bTMLB5c__FisPagHaB2?rs=1&pid=ImgDetMain)
 
 ## Overview
 
