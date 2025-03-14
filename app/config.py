@@ -3,7 +3,8 @@ import os
 class Settings:
     SECRET_AI_API_KEY = os.getenv("SECRET_AI_API_KEY")
     API_KEY = os.getenv("API_KEY", "bWFzdGVyQHNjcnRsYWJzLmNvbTpTZWNyZXROZXR3b3JrTWFzdGVyS2V5X18yMDI1")
-    CORS_ORIGINS = ["https://prompt-hub-silk.vercel.app", "*"]
+    # Set CORS_ORIGINS to a list that allows all origins for maximum compatibility
+    CORS_ORIGINS = ["*"]
     
     # Define allowed origins for secure access without API key
     # Default to the Vercel app and wildcard (*) if environment variable is not set

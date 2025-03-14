@@ -30,12 +30,15 @@ def create_app():
         redoc_url="/redoc"
     )
 
+    # Configure CORS - ensure it handles preflight requests correctly
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=settings.CORS_ORIGINS,
+        allow_origins=["*"],  # Use wildcard to allow all origins
         allow_credentials=True,
         allow_methods=["*"],
         allow_headers=["*"],
+        expose_headers=["*"],
+        max_age=86400,  # Cache preflight requests for 24 hours
     )
 
     # Import routers here to avoid circular imports
