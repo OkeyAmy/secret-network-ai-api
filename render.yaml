@@ -3,15 +3,17 @@ services:
     name: secret-network-ai-api
     env: python
     buildCommand: pip install -r requirements.txt
-    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    startCommand: gunicorn -w 4 -k uvicorn.workers.UvicornWorker app.main:app
     envVars:
-      - key: SECRET_AI_API_KEY
-        value: "bWFzdGVyQHNjcnRsYWJzLmNvbTpTZWNyZXROZXR3b3JrTWFzdGVyS2V5X18yMDI1"
-      - key: API_KEY
-        value: "frontend-access-key-2025"
       - key: PORT
         value: 8000
+      - key: PYTHON_VERSION
+        value: 3.12.0
+      - key: SECRET_AI_API_KEY
+        value: bWFzdGVyQHNjcnRsYWJzLmNvbTpTZWNyZXROZXR3b3JrTWFzdGVyS2V5X18yMDI1
       - key: ENVIRONMENT
         value: "production"
+      - key: CORS_ORIGINS
+        value: "*"
       - key: ALLOWED_ORIGINS
-        value: "https://prompt-hub-silk.vercel.app,*"
+        value: "*"
