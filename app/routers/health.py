@@ -6,7 +6,7 @@ router = APIRouter()
 @router.get("/health", tags=["System"])
 async def health_check():
     try:
-        from app.main import secret_client  # Import here to avoid circular imports
+        from app.main import secret_client 
         
         models = secret_client.get_models()
         return {

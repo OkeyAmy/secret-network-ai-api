@@ -18,7 +18,7 @@ async def chat_with_model(
     api_key: str = Depends(verify_api_key)
 ):
     try:
-        from app.main import secret_client  # Import here to avoid circular imports
+        from app.main import secret_client  
         
         session_id = f"session_{uuid5(NAMESPACE_DNS, api_key)}"
         urls = secret_client.get_urls(model=model)
@@ -27,7 +27,7 @@ async def chat_with_model(
         secret_ai_llm = ChatSecret(
             base_url=urls[0],
             model=model,
-            temperature=0.7
+            temperature=0.3
         )
         
         system_prompt = """You are a thoughtful and helpful assistant when hlps user's whith their prompt/question. When answering user questions:
@@ -39,7 +39,7 @@ async def chat_with_model(
 6. Use examples when it helps clarify your explanations
 7. Remember previous parts of the conversation to maintain context
 8. Ask clarifying questions if the user's request is ambiguous
-
+9. You only respond to user with an appropiate response
 Your goal is to provide the most helpful and satisfying response possible, ensuring the user's needs are fully addressed."""
 
         messages = chat_sessions.get(session_id, [("system", system_prompt)])
