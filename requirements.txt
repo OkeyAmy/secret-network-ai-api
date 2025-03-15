@@ -16,4 +16,4 @@ secret-sdk>=1.8.1
 secret-ai-sdk>=0.9.0
 
 # Additional dependencies for deployment
-gunicorn==20.1.0
+gunicorn==22.0.0
