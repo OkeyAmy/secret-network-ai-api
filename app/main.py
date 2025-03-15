@@ -39,6 +39,11 @@ def create_app():
         allow_headers=["*"],
     )
 
+    # Root endpoint for health check
+    @app.get("/")
+    async def root():
+        return {"message": "Secret Network AI API is running", "status": "healthy"}
+
     # Import routers here to avoid circular imports
     from app.routers.model import router as models_router
     from app.routers.chat import router as chat_router
