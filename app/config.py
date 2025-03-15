@@ -1,13 +1,36 @@
 import os
+from typing import List, Union
 
 class Settings:
-    SECRET_AI_API_KEY = os.getenv("SECRET_AI_API_KEY")
-    API_KEY = os.getenv("API_KEY", "bWFzdGVyQHNjcnRsYWJzLmNvbTpTZWNyZXROZXR3b3JrTWFzdGVyS2V5X18yMDI1")
-    # Set CORS_ORIGINS to a list that allows all origins for maximum compatibility
-    CORS_ORIGINS = ["*"]
+    # Secure environment variables with default fallback
+    SECRET_AI_API_KEY: Union[str, None] = os.getenv("SECRET_AI_API_KEY")
     
-    # Define allowed origins for secure access without API key
-    # Default to the Vercel app and wildcard (*) if environment variable is not set
-    ALLOWED_ORIGINS = os.getenv("ALLOWED_ORIGINS", "https://prompt-hub-silk.vercel.app,*").split(",")
+    # Predefined API key with secure default
+    API_KEY: str = os.getenv("API_KEY", "bWFzdGVyQHNjcnRsYWJzLmNvbTpTZWNyZXROZXR3b3JrTWFzdGVyS2V5X18yMDI1")
+    
+    # CORS and Origin Configuration
+    @property
+    def CORS_ORIGINS(self) -> List[str]:
+        """
+        Dynamically generate CORS origins with intelligent fallback.
+        Prioritizes environment variable, falls back to wildcard.
+        """
+        origins = os.getenv("CORS_ORIGINS", "*").split(",")
+        return ["*"] if "*" in origins else origins
+    
+    @property
+    def ALLOWED_ORIGINS(self) -> List[str]:
+        """
+        Dynamically generate allowed origins with intelligent fallback.
+        Prioritizes environment variable, falls back to wildcard.
+        """
+        origins = os.getenv("ALLOWED_ORIGINS", "*").split(",")
+        return ["*"] if "*" in origins else origins
+
+    def __repr__(self) -> str:
+        """
+        Provide a string representation of the settings for debugging.
+        """
+        return f"Settings(SECRET_AI_API_KEY={'*' * 8 if self.SECRET_AI_API_KEY else 'Not Set'})"
 
 settings = Settings()

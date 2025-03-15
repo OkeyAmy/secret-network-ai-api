@@ -1,8 +1,7 @@
 import os
 from dotenv import load_dotenv
-from fastapi import FastAPI, Request, Response
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from starlette.middleware.base import BaseHTTPMiddleware
 from app.config import settings
 
 # Load environment variables
@@ -22,16 +21,6 @@ if not secret_ai_api_key:
     from secret_ai_sdk.secret_ai_ex import SecretAIAPIKeyMissingError
     raise SecretAIAPIKeyMissingError("Failed to set the SECRET_AI_API_KEY environment variable")
 
-# Custom CORS middleware class
-class CORSMiddlewareCustom(BaseHTTPMiddleware):
-    async def dispatch(self, request: Request, call_next):
-        response = await call_next(request)
-        # Set CORS headers manually for all responses
-        response.headers["Access-Control-Allow-Origin"] = "*"
-        response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS"
-        response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization, X-API-Key"
-        return response
-
 def create_app():
     app = FastAPI(
         title="Secret Network AI Hub API",
@@ -41,26 +30,14 @@ def create_app():
         redoc_url="/redoc"
     )
 
-    # Add custom CORS middleware for maximum compatibility
-    app.add_middleware(CORSMiddlewareCustom)
-    
-    # Standard CORS middleware as fallback (with fixed settings)
+    # Configure CORS with dynamic origins
     app.add_middleware(
         CORSMiddleware,
-        allow_origins=["*"],
-        allow_credentials=False,  # Set to False when using wildcard
+        allow_origins=settings.CORS_ORIGINS,
+        allow_credentials=True,
         allow_methods=["*"],
         allow_headers=["*"],
     )
-
-    # Add OPTIONS route handler for preflight requests
-    @app.options("/{rest_of_path:path}")
-    async def options_route(request: Request, rest_of_path: str):
-        response = Response(status_code=200)
-        response.headers["Access-Control-Allow-Origin"] = "*"
-        response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS"
-        response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization, X-API-Key"
-        return response
 
     # Import routers here to avoid circular imports
     from app.routers.model import router as models_router
