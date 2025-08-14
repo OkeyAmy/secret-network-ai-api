@@ -19,3 +19,5 @@ langchain-ollama
 # Additional dependencies for deployment
 gunicorn
 setuptools
+cffi
+secp256k1
